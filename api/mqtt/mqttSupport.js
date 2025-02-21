@@ -17,8 +17,10 @@ const port = process.env.port;
 const host = process.env.host;
 const topic = process.env.topic;
 const clientId = process.env.clientId;
-const serverUsername = process.env.username;
+const serverUsername = process.env.mqttUsername;
 const serverPassword = process.env.password;
+
+console.log(protocol, port, host, topic, clientId, serverUsername, serverPassword)
 
 const connectUrl = `${protocol}://${host}:${port}`;
 
