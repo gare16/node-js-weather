@@ -17,14 +17,14 @@ const port = process.env.port;
 const host = process.env.host;
 const topic = process.env.topic;
 const clientId = process.env.clientId;
-const serverUsername = process.env.mqttUsername;
-const serverPassword = process.env.password;
+const serUsername = process.env.mqttUsername;
+const serPassword = process.env.password;
 
 const connectUrl = `${protocol}://${host}:${port}`;
-// rejectrejectUnauthorized: false,
-// username: serverUsername,
-// password: serverPassword,
 const client = mqtt.connect(connectUrl, {
+  rejectUnauthorized: false,
+  username: serUsername,
+  password: serPassword,
   clientId,
   clean: true,
   connectTimeout: 4000,
@@ -44,7 +44,6 @@ export const MqttConnection = () => {
       console.log(`Subscribe to topic '${topic}'`);
     });
   });
-
   client.on("message", async (topic, payload) => {
     const dataRecived = JSON.parse(payload.toString());
     temporary = await ManageData(dataRecived);
@@ -54,6 +53,7 @@ export const MqttConnection = () => {
       temporary.location
     )} Terjadi ${Capitalize(temporary.rainfall)}`;
 
+    console.log("data diterima: ", temporary);
     if (temporary.classification !== "cerah") {
       sendNotificationToTopic(title, content);
       writeMongoDB(temporary);

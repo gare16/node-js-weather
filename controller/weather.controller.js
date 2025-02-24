@@ -32,13 +32,11 @@ export const findProjects = async (req, res) => {
 export const getLocation = async (req, res) => {
   try {
     const uniqueLocations = await weatherModel.distinct("location");
-    const cleanedArray = uniqueLocations.map((item) =>
-      item.replace(/[, -].*/, "")
-    );
     const cleanArray = uniqueLocations
       .map((item) => item.split(",")[0].trim()) // Ambil kata pertama sebelum koma dan hapus spasi
       .filter((word) => word && word !== "-");
-    res.status(200).json(cleanArray);
+    const duplicatedData = [...new Set(cleanArray)];
+    res.status(200).json(duplicatedData);
   } catch (error) {
     res.send(error);
   }
@@ -99,6 +97,21 @@ export const createWeather = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: error,
+    });
+  }
+};
+export const deleteData = async (req, res) => {
+  try {
+    const deleteDash = await weatherModel.deleteMany({
+      location: "-, -",
+    });
+    res.status(200).json({
+      message: "delete -, - success!",
+      deleteDash,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: err,
     });
   }
 };
