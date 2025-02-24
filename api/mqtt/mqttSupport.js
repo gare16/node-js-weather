@@ -20,14 +20,11 @@ const clientId = process.env.clientId;
 const serverUsername = process.env.mqttUsername;
 const serverPassword = process.env.password;
 
-console.log(protocol, port, host, topic, clientId, serverUsername, serverPassword)
-
 const connectUrl = `${protocol}://${host}:${port}`;
-
+// rejectrejectUnauthorized: false,
+// username: serverUsername,
+// password: serverPassword,
 const client = mqtt.connect(connectUrl, {
-  rejectrejectUnauthorized: false,
-  username: serverUsername,
-  password: serverPassword,
   clientId,
   clean: true,
   connectTimeout: 4000,
@@ -40,6 +37,7 @@ let temporaryA = {};
 let temporaryB = {};
 
 export const MqttConnection = () => {
+  console.log("conecting broker...");
   client.on("connect", () => {
     console.log("Connected to MQTT!");
     client.subscribe([topic], () => {
